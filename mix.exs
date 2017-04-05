@@ -1,16 +1,26 @@
 defmodule Catalyst.Mixfile do
   use Mix.Project
 
+  @version  "0.0.1"
+
   def project do
     [app: :catalyst,
-     version: "0.0.1",
+     version: @version,
      elixir: "~> 1.2",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      aliases: aliases(),
-     deps: deps()]
+     deps: deps(),
+     name: "Catalyst",
+
+     description: description(),
+
+     docs: [source_ref: "v#{@version}", main: "Catalyst",
+            canonical: "http://hexdocs.pm/catalyst",
+            source_url: "https://github.com/SoroushMehrInst/catalyst",
+            extras: ["pages/Rest Api.md"]]]
   end
 
   # Configuration for the OTP application.
@@ -37,7 +47,15 @@ defmodule Catalyst.Mixfile do
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
-     {:cowboy, "~> 1.0"}]
+     {:cowboy, "~> 1.0"},
+     {:ex_doc, "~> 0.15", only: :dev},
+     {:earmark, "~> 1.2", only: :dev}]
+  end
+
+  defp description do
+    """
+    service for online simple product key activation and key management.
+    """
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
