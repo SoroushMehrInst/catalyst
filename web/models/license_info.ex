@@ -8,6 +8,8 @@ defmodule Catalyst.LicenseInfo do
     field :max_users, :integer
     field :is_valid, :boolean, default: false
 
+    field :max_unregister, :integer, default: 0, null: false
+
     has_many :registrations, Registration
 
     timestamps()

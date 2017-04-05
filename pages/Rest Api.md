@@ -51,3 +51,10 @@ HTTP Status code 200 (OK!)
 ```
 
 ---
+
+## List of api errors
+| Error | Description |
+| ----- | ----------- |
+| NOT_FOUND | The following license is not available in database. |
+| UNABLE_TO_REGISTER | The device id or activation code is not valid for this register procedure. |
+| UNABLE_TO_UNREGISTER | The license is not able to deactivate. it may be non deactivatable or max deactivate reached! |

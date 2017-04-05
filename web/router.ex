@@ -23,5 +23,6 @@ defmodule Catalyst.Router do
     pipe_through :api
 
     post "/licensing/register", LicenseInfoController, :register
+    post "/licensing/unregister", LicenseInfoController, :unregister
   end
 end

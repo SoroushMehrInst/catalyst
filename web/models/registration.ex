@@ -6,6 +6,11 @@ defmodule Catalyst.Registration do
     field :registration_date, :utc_datetime
     field :is_valid, :boolean, default: true
 
+    field :is_unregistered, :boolean, default: false
+    field :unregister_date, :utc_datetime
+
+    field :registration_id, :uuid
+
     belongs_to :license, LicenseInfo
 
     timestamps()
