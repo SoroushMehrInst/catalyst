@@ -8,6 +8,8 @@ defmodule Catalyst.LicenseInfo do
     field :max_users, :integer
     field :is_valid, :boolean, default: false
 
+    has_many :registrations, Registration
+
     timestamps()
   end
 
@@ -16,7 +18,7 @@ defmodule Catalyst.LicenseInfo do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :active_code, :valid_from, :valid_until, :max_users, :is_valid])
-    |> validate_required([:id, :active_code, :valid_from, :valid_until, :max_users, :is_valid])
+    |> cast(params, [:active_code, :valid_from, :valid_until, :max_users, :is_valid])
+    |> validate_required([:active_code, :valid_from, :valid_until, :max_users, :is_valid])
   end
 end

@@ -14,7 +14,7 @@ defmodule Catalyst.Router do
   end
 
   scope "/", Catalyst do
-    pipe_through :browser # Use the default browser stack
+    # pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
   end
@@ -22,6 +22,6 @@ defmodule Catalyst.Router do
   scope "/api", Catalyst do
     pipe_through :api
 
-    resources "/licensing", LicenseInfoController, except: [:new, :edit]
+    post "/licensing/register", LicenseInfoController, :register
   end
 end
