@@ -10,12 +10,15 @@ Preffered verbs are available in each API documentations.
 ## Full List Of REST Actions:
 | Action | URL | Description |
 | --- | --- | --- |
-| [License Register](#register) | ``api/licensing/register`` | Handles registration of a license on device |
+| [License Register](#license-register) | ``api/licensing/register`` | Handles registration of a license on device |
+| [License Unregister](#license-unregister) | ``api/licensing/register`` | Handles registration of a license on device |
 ---
 
 
-## Register
+## License Register
 /api/licensing/register ``POST``
+
+Registers a license on a specific device.
 
 ### Request info
 
@@ -47,6 +50,47 @@ HTTP Status code 200 (OK!)
     "msg": "You are not able to activate with this code on this device!",
     "is_activated": false,
     "err": "UNABLE_TO_ACTIVATE"
+}
+```
+
+---
+
+## License Unregister
+/api/licensing/unregister ``POST``
+
+Deactivates a license from a device if possible.
+This method is useful in scenarios where users need to migrate from a device.
+
+### Request info
+
+| URL   | /api/licensing/unregister |
+| Verb  | ``POST (only)`` |
+| Accepts  | ``JSON`` |
+| Format  | ``{"device_id":"USERS_DEVICE_ID_HERE", "active_code":"USERS_ACTIVATION_CODE_HERE", "registration_id":"REGISTATION_ID_HERE"}`` |
+
+### Response info
+
+Response content type: ``JSON``
+
+If activation is successful (Status code 200 OK) ``is_unregistered`` will be true and a ``registration_id`` as a string will be provided.
+
+If activation is unsuccessful ``is_unregistered`` will be false and ``err`` and ``msg`` will be provided about the error(s).
+
+### Success Response Sample
+HTTP Status code 200 (OK!)
+```json
+{
+    "registration_id": "abcsderw123kda",
+    "is_unregistered": true
+}
+```
+
+### Unsuccessful Response Sample
+```json
+{
+    "msg": "You are not able to activate with this code on this device!",
+    "is_unregistered": false,
+    "err": "UNABLE_TO_DEACTIVATE"
 }
 ```
 

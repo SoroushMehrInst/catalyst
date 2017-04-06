@@ -43,21 +43,21 @@ defmodule Catalyst.LicenseInfoController do
       {:error, _cause} ->
         conn
         |> put_status(:not_found)
-        |> render("uregister_error.json", err: "NOT_FOUND", msg: "Your activation code is invalid. Please check and try again!")
+        |> render("unregister_error.json", err: "NOT_FOUND", msg: "Your activation code is invalid. Please check and try again!")
       {:ok, license} ->
         case try_unregister(license, device_id, registration_id) do
           {:error, :max_inactive_reached} ->
             conn
-            |> put_status(:not_found)
-            |> render("uregister_error.json", err: "UNABLE_TO_UNREGISTER", msg: "You are not able to deactivate this code on this device!")
+            |> put_status(:forbidden)
+            |> render("unregister_error.json", err: "UNABLE_TO_UNREGISTER", msg: "You are not able to deactivate this code on this device!")
           {:ok, register_info} ->
             conn
             |> put_status(:ok)
-            |> render("uregister_success.json", register_info: register_info)
+            |> render("unregister_success.json", register_info: register_info)
           _ ->
             conn
             |> put_status(500)
-            |> render("uregister_error.json", err: "UNKNOWN_ERROR", msg: "An Unknown error occured in deactivation procedure!")
+            |> render("unregister_error.json", err: "UNKNOWN_ERROR", msg: "An Unknown error occured in deactivation procedure!")
         end
     end
   end
@@ -80,23 +80,25 @@ defmodule Catalyst.LicenseInfoController do
   end
 
   defp try_register(license, device_id) do
-    current_actives = Repo.one(
-      from r in Registration,
-      join: l in LicenseInfo,
-      where: l.id == ^license.id and r.is_unregistered == false,
-      select: count("r.id"))
-
     case is_previously_registered(license, device_id) do
       {:ok, register_info} ->
         {:ok, register_info}
       _ ->
+        current_actives = Repo.one(
+          from r in Registration,
+          join: l in LicenseInfo,
+          where: l.id == ^license.id and r.is_unregistered == false,
+          select: count("r.id"))
+
         cond do
           license.max_users <= current_actives -> # New registration not possible due to max_users reach
             {:error, :max_users_reached}
           true -> # Register New User
-            changeset = Registration.changeset(%Registration{},
-             %{device_id: device_id, license_id: license.id, registration_date: DateTime.utc_now, registration_id: Ecto.UUID.generate})
-            case Repo.insert(changeset) do
+            case Repo.insert(%Registration{
+                device_id: device_id,
+                license_id: license.id,
+                registration_date: DateTime.utc_now,
+                registration_id: Ecto.UUID.generate}) do
               {:ok, register_info} ->
                 {:ok, register_info}
               {:error, _changeset} ->
@@ -114,11 +116,19 @@ defmodule Catalyst.LicenseInfoController do
       select: count("r.id"))
 
       cond do
-        license.max_unregister <= current_inactives -> # New registration not possible due to max_users reach
+        license.max_unregister <= current_inactives -> # Unregistration not possible due to max_users reach
           {:error, :max_inactive_reached}
         true -> # Register New User
-          changeset = Registration.changeset(%Registration{device_id: device_id, license_id: license.id},
-           %{is_unregistered: true, unregister_date: DateTime.utc_now})
+          registration = Repo.one(
+            from r in Registration,
+            where: r.registration_id == ^registration_id,
+            select: r)
+
+          changeset = Registration.changeset(registration, %{is_unregistered: true, unregister_date: DateTime.utc_now})
+
+          require IEx
+          IEx.pry
+
           case Repo.update(changeset) do
             {:ok, register_info} ->
               {:ok, register_info}
@@ -132,7 +142,7 @@ defmodule Catalyst.LicenseInfoController do
     device_activated = Repo.one(
       from r in Registration,
       join: l in LicenseInfo,
-      where: l.id == ^license.id and r.device_id == ^device_id,
+      where: l.id == ^license.id and r.device_id == ^device_id and r.is_unregistered == false,
       select: r)
 
     case device_activated do

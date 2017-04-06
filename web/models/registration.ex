@@ -9,7 +9,7 @@ defmodule Catalyst.Registration do
     field :is_unregistered, :boolean, default: false
     field :unregister_date, :utc_datetime
 
-    field :registration_id, :uuid
+    field :registration_id, Ecto.UUID
 
     belongs_to :license, LicenseInfo
 
@@ -21,7 +21,7 @@ defmodule Catalyst.Registration do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:device_id, :registration_date, :is_valid])
+    |> cast(params, [:device_id, :registration_date, :is_valid, :is_unregistered, :unregister_date])
     |> validate_required([:device_id, :registration_date])
   end
 end
