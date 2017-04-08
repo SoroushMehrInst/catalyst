@@ -22,6 +22,8 @@ Registers a license on a specific device.
 
 ### Request info
 
+| Parameter | Info |
+| --- | --- |
 | URL   | /api/licensing/register |
 | Verb  | ``POST (only)`` |
 | Accepts  | ``JSON`` |
@@ -63,6 +65,8 @@ This method is useful in scenarios where users need to migrate from a device.
 
 ### Request info
 
+| Parameter | Info |
+| --- | --- |
 | URL   | /api/licensing/unregister |
 | Verb  | ``POST (only)`` |
 | Accepts  | ``JSON`` |
