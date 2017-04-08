@@ -28,7 +28,8 @@ Registers a license on a specific device.
 | Verb  | ``POST (only)`` |
 | Accepts  | ``application/json`` |
 
-Format: ```json
+Format: 
+```json
 {
     "device_id": "USERS_DEVICE_ID_HERE",
     "active_code": "USERS_ACTIVATION_CODE_HERE",
