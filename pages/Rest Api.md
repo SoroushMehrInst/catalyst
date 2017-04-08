@@ -26,7 +26,7 @@ Registers a license on a specific device.
 | --- | --- |
 | URL   | /api/licensing/register |
 | Verb  | ``POST (only)`` |
-| Accepts  | ``JSON`` |
+| Accepts  | ``application/json`` |
 | Format  | ``{"device_id":"USERS_DEVICE_ID_HERE", "active_code":"USERS_ACTIVATION_CODE_HERE"}`` |
 
 ### Response info
@@ -69,7 +69,7 @@ This method is useful in scenarios where users need to migrate from a device.
 | --- | --- |
 | URL   | /api/licensing/unregister |
 | Verb  | ``POST (only)`` |
-| Accepts  | ``JSON`` |
+| Accepts  | ``application/json`` |
 | Format  | ``{"device_id":"USERS_DEVICE_ID_HERE", "active_code":"USERS_ACTIVATION_CODE_HERE", "registration_id":"REGISTATION_ID_HERE"}`` |
 
 ### Response info
