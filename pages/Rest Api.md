@@ -27,7 +27,20 @@ Registers a license on a specific device.
 | URL   | /api/licensing/register |
 | Verb  | ``POST (only)`` |
 | Accepts  | ``application/json`` |
-| Format  | ``{"device_id":"USERS_DEVICE_ID_HERE", "active_code":"USERS_ACTIVATION_CODE_HERE"}`` |
+
+Format: ```json
+{
+    "device_id": "USERS_DEVICE_ID_HERE",
+    "active_code": "USERS_ACTIVATION_CODE_HERE",
+    "additional_info": [{
+        "Key": "phone_number",
+        "Value": "PHONE"
+    }, {
+        "Key": "any_other_param",
+        "Value": "VALUE"
+    }]
+}
+```
 
 ### Response info
 
