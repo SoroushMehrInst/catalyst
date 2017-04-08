@@ -129,7 +129,7 @@ defmodule Catalyst.LicenseInfoController do
   end
 
   defp do_get_add_info(register_id, [map_info | tail], acc) do
-    map_info |> Map.keys |> List.first
+    [key | _] = Map.keys map_info
 
     do_get_add_info(register_id,
       tail,

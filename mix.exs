@@ -49,7 +49,9 @@ defmodule Catalyst.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:ex_doc, "~> 0.15", only: :dev},
-     {:earmark, "~> 1.2", only: :dev}]
+     {:earmark, "~> 1.2", only: :dev},
+     {:edeliver, ">= 1.4.2"},
+     {:distillery, "~> 1.2", warn_missing: false}]
   end
 
   defp description do
