@@ -13,6 +13,8 @@ defmodule Catalyst.Registration do
 
     belongs_to :license, LicenseInfo
 
+    has_many :registration_additional_info, Catalyst.RegistrationAdditionalInfo
+
     timestamps()
   end
 

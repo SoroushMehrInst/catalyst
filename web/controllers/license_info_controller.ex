@@ -7,6 +7,7 @@ defmodule Catalyst.LicenseInfoController do
 
   alias Catalyst.LicenseInfo
   alias Catalyst.Registration
+  alias Catalyst.RegistrationAdditionalInfo
 
   ###
   # API actions
@@ -15,7 +16,7 @@ defmodule Catalyst.LicenseInfoController do
   @doc """
   Registers a device with an activation code and returns registration status
   """
-  def register(conn, %{"device_id" => device_id, "active_code" => active_code}) do
+  def register(conn, %{"device_id" => device_id, "active_code" => active_code, "additional_info" => additional_info}) do
     case find_license(active_code) do
       {:error, _cause} ->
         conn
@@ -28,6 +29,7 @@ defmodule Catalyst.LicenseInfoController do
             |> put_status(:not_found)
             |> render("register_error.json", err: "UNABLE_TO_REGISTER", msg: "You are not able to activate with this code on this device!")
           {:ok, register_info} ->
+            submit_additional_info(register_info, additional_info) # currently results are ignored
             conn
             |> put_status(:ok)
             |> render("register_success.json", register_info: register_info)
@@ -90,6 +92,8 @@ defmodule Catalyst.LicenseInfoController do
           where: l.id == ^license.id and r.is_unregistered == false,
           select: count("r.id"))
 
+        alias Catalyst.RegistrationAdditionalInfo
+
         cond do
           license.max_users <= current_actives -> # New registration not possible due to max_users reach
             {:error, :max_users_reached}
@@ -101,12 +105,38 @@ defmodule Catalyst.LicenseInfoController do
                 registration_id: Ecto.UUID.generate}) do
               {:ok, register_info} ->
                 {:ok, register_info}
-              {:error, _changeset} ->
+              {:error, changeset} ->
                 {:error, :changeset_error}
             end
         end
     end
   end
+
+  defp submit_additional_info(register_info, additional_info) do
+    db_add_info = get_add_info(register_info.id, additional_info)
+    count = Enum.count(db_add_info)
+
+    case Repo.insert_all(RegistrationAdditionalInfo, db_add_info) do
+      {^count, _} ->
+        :ok
+      _ ->
+        :error
+    end
+  end
+
+  defp get_add_info(register_id, additional_info) when is_list(additional_info) do
+    do_get_add_info(register_id, additional_info, [])
+  end
+
+  defp do_get_add_info(register_id, [map_info | tail], acc) do
+    map_info |> Map.keys |> List.first
+
+    do_get_add_info(register_id,
+      tail,
+      [%{field_name: key, field_value: map_info[key], registrations_id: register_id} | acc])
+  end
+
+  defp do_get_add_info(_register_id, [], acc), do: acc
 
   defp try_unregister(license, device_id, registration_id) do
     current_inactives = Repo.one(
