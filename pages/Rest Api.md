@@ -84,7 +84,15 @@ This method is useful in scenarios where users need to migrate from a device.
 | URL   | /api/licensing/unregister |
 | Verb  | ``POST (only)`` |
 | Accepts  | ``application/json`` |
-| Format  | ``{"device_id":"USERS_DEVICE_ID_HERE", "active_code":"USERS_ACTIVATION_CODE_HERE", "registration_id":"REGISTATION_ID_HERE"}`` |
+
+Format:
+```json
+{
+    "device_id": "USERS_DEVICE_ID_HERE",
+    "active_code": "USERS_ACTIVATION_CODE_HERE",
+    "registration_id": "REGISTATION_ID_HERE"
+}
+```
 
 ### Response info
 
