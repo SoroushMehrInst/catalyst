@@ -34,11 +34,9 @@ Format:
     "device_id": "USERS_DEVICE_ID_HERE",
     "active_code": "USERS_ACTIVATION_CODE_HERE",
     "additional_info": [{
-        "Key": "phone_number",
-        "Value": "PHONE"
+        "phone_number": "PHONE"
     }, {
-        "Key": "any_other_param",
-        "Value": "VALUE"
+        "any_other_param": "VALUE"
     }]
 }
 ```
