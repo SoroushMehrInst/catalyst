@@ -42,8 +42,8 @@ defmodule Catalyst.Mixfile do
   defp deps do
     [{:phoenix, "~> 1.2.1"},
      {:phoenix_pubsub, "~> 1.0"},
-     {:phoenix_ecto, "~> 3.0"},
-     {:postgrex, ">= 0.0.0"},
+     {:phoenix_ecto, "~> 3.2.3", override: true},
+     {:postgrex, ">= 0.0.0", override: true},
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
@@ -52,7 +52,7 @@ defmodule Catalyst.Mixfile do
      {:earmark, "~> 1.2", only: :dev},
      {:edeliver, ">= 1.4.2"},
      {:distillery, "~> 1.2", warn_missing: false},
-     {:ex_admin, "~> 0.8"}]
+     {:ex_admin, github: "smpallen99/ex_admin"}]
   end
 
   defp description do
