@@ -12,6 +12,8 @@ defmodule Catalyst.LicenseInfo do
 
     has_many :registrations, Registration
 
+    belongs_to :application, Catalyst.Application
+
     timestamps()
   end
 
