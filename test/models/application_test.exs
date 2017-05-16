@@ -3,7 +3,7 @@ defmodule Catalyst.ApplicationTest do
 
   alias Catalyst.Application
 
-  @valid_attrs %{is_enabled: true, friendly_name: "some content", name: "app1", valid_from: DateTime.utc_now, valid_until: DateTime.utc_now}
+  @valid_attrs %{is_enabled: true, name: "app1", valid_from: DateTime.utc_now, valid_until: DateTime.utc_now}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

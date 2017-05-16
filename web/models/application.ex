@@ -3,7 +3,6 @@ defmodule Catalyst.Application do
 
   schema "applications" do
     field :name, :string
-    field :friendly_name, :string
     field :is_enabled, :boolean, default: false
     field :valid_until, :utc_datetime, null: true
     field :valid_from, :utc_datetime
@@ -18,7 +17,7 @@ defmodule Catalyst.Application do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :is_enabled, :valid_until, :valid_from, :friendly_name])
-    |> validate_required([:name, :is_enabled, :valid_from, :friendly_name])
+    |> cast(params, [:name, :is_enabled, :valid_until, :valid_from])
+    |> validate_required([:name, :is_enabled, :valid_from])
   end
 end
