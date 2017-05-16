@@ -14,10 +14,24 @@ defmodule Catalyst.LicenseInfoController do
   ###
 
   @doc """
-  Registers a device with an activation code and returns registration status
+  Register wrapper for requests without ``app_id``
   """
   def register(conn, %{"device_id" => device_id, "active_code" => active_code, "additional_info" => additional_info}) do
-    case find_license(active_code) do
+    case get_default_app() do
+      nil ->
+        conn
+        |> put_status(500)
+        |> render("register_error.json", err: "CONFIG_ERROR", msg: "Current application configuration is incorrect!")
+      app ->
+        register(conn, %{"device_id" => device_id, "active_code" => active_code, "additional_info" => additional_info, "app_id" => app.id})
+    end
+  end
+
+  @doc """
+  Registers a device with an activation code and returns registration status
+  """
+  def register(conn, %{"device_id" => device_id, "active_code" => active_code, "additional_info" => additional_info, "app_id" => app_id}) do
+    case find_license(active_code, app_id) do
       {:error, _cause} ->
         conn
         |> put_status(:not_found)
@@ -38,10 +52,24 @@ defmodule Catalyst.LicenseInfoController do
   end
 
   @doc """
-  Cancels a registeration requested by the user if possible
+  Unregister wrapper for requests without ``app_id``
   """
   def unregister(conn, %{"device_id" => device_id, "active_code" => active_code, "registration_id" => registration_id}) do
-    case find_license(active_code) do
+    case get_default_app() do
+      nil ->
+        conn
+        |> put_status(500)
+        |> render("register_error.json", err: "CONFIG_ERROR", msg: "Current application configuration is incorrect!")
+      app ->
+        unregister(conn, %{"device_id" => device_id, "active_code" => active_code, "registration_id" => registration_id, "app_id" => app.id})
+    end
+  end
+
+  @doc """
+  Cancels a registeration requested by the user if possible
+  """
+  def unregister(conn, %{"device_id" => device_id, "active_code" => active_code, "registration_id" => registration_id, "app_id" => app_id}) do
+    case find_license(active_code, app_id) do
       {:error, _cause} ->
         conn
         |> put_status(:not_found)
@@ -68,9 +96,9 @@ defmodule Catalyst.LicenseInfoController do
   # Helpers
   ###
 
-  defp find_license(active_code) do
+  defp find_license(active_code, app_id) do
     licence_info_query = from d in LicenseInfo,
-                          where: d.active_code == ^active_code,
+                          where: d.active_code == ^active_code and d.id == ^app_id,
                           select: d
 
     case Repo.one(licence_info_query) do
@@ -182,4 +210,7 @@ defmodule Catalyst.LicenseInfoController do
         :not_activated_before
     end
   end
+
+  defp get_default_app(), do:
+    Repo.one(from d in Catalyst.Application, order_by: [d.id], select: d)
 end
