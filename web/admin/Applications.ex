@@ -1,8 +1,8 @@
-defmodule Catalyst.ExAdmin.Dashboard do
+defmodule Catalyst.ExAdmin.Applications do
   use ExAdmin.Register
 
-  register_page "Dashboard" do
-    menu priority: 1, label: "Dashboard"
+  register_page "Applications" do
+    menu priority: 2, label: "Applications"
 
     content do
       div ".blank_slate_container#dashboard_default_message" do

@@ -27,6 +27,7 @@ config :ex_admin,
   module: Catalyst,    # MyProject.Web for phoenix >= 1.3.0-rc
   modules: [
     Catalyst.ExAdmin.Dashboard,
+    Catalyst.ExAdmin.Applications,
   ]
 
 # Import environment specific config. This must remain at the bottom
