@@ -14,20 +14,6 @@ defmodule Catalyst.LicenseInfoController do
   ###
 
   @doc """
-  Register wrapper for requests without ``app_id``
-  """
-  def register(conn, %{"device_id" => device_id, "active_code" => active_code, "additional_info" => additional_info}) do
-    case get_default_app() do
-      nil ->
-        conn
-        |> put_status(500)
-        |> render("register_error.json", err: "CONFIG_ERROR", msg: "Current application configuration is incorrect!")
-      app ->
-        register(conn, %{"device_id" => device_id, "active_code" => active_code, "additional_info" => additional_info, "app_id" => app.id})
-    end
-  end
-
-  @doc """
   Registers a device with an activation code and returns registration status
   """
   def register(conn, %{"device_id" => device_id, "active_code" => active_code, "additional_info" => additional_info, "app_id" => app_id}) do
@@ -52,16 +38,16 @@ defmodule Catalyst.LicenseInfoController do
   end
 
   @doc """
-  Unregister wrapper for requests without ``app_id``
+  Register wrapper for requests without ``app_id``
   """
-  def unregister(conn, %{"device_id" => device_id, "active_code" => active_code, "registration_id" => registration_id}) do
+  def register(conn, %{"device_id" => device_id, "active_code" => active_code, "additional_info" => additional_info}) do
     case get_default_app() do
       nil ->
         conn
         |> put_status(500)
         |> render("register_error.json", err: "CONFIG_ERROR", msg: "Current application configuration is incorrect!")
       app ->
-        unregister(conn, %{"device_id" => device_id, "active_code" => active_code, "registration_id" => registration_id, "app_id" => app.id})
+        register(conn, %{"device_id" => device_id, "active_code" => active_code, "additional_info" => additional_info, "app_id" => app.id})
     end
   end
 
@@ -92,13 +78,27 @@ defmodule Catalyst.LicenseInfoController do
     end
   end
 
+  @doc """
+  Unregister wrapper for requests without ``app_id``
+  """
+  def unregister(conn, %{"device_id" => device_id, "active_code" => active_code, "registration_id" => registration_id}) do
+    case get_default_app() do
+      nil ->
+        conn
+        |> put_status(500)
+        |> render("register_error.json", err: "CONFIG_ERROR", msg: "Current application configuration is incorrect!")
+      app ->
+        unregister(conn, %{"device_id" => device_id, "active_code" => active_code, "registration_id" => registration_id, "app_id" => app.id})
+    end
+  end
+
   ###
   # Helpers
   ###
 
   defp find_license(active_code, app_id) do
     licence_info_query = from d in LicenseInfo,
-                          where: d.active_code == ^active_code and d.id == ^app_id,
+                          where: d.active_code == ^active_code and d.application_id == ^app_id,
                           select: d
 
     case Repo.one(licence_info_query) do
