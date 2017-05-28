@@ -133,8 +133,6 @@ defmodule Catalyst.LicenseInfoController do
               {:ok, register_info} ->
                 {:ok, register_info}
               {:error, changeset} ->
-                Logger.info "Changeset Error!"
-                Logger.info IO.inspect(changeset)
                 {:error, :changeset_error}
             end
         end
