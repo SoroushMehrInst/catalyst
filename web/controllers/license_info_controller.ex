@@ -116,9 +116,8 @@ defmodule Catalyst.LicenseInfoController do
       _ ->
         current_actives = Repo.one(
           from r in Registration,
-          join: l in LicenseInfo,
-          where: l.id == ^license.id and r.is_unregistered == false,
-          select: count("r.id"))
+          where: r.license_id == ^license.id,
+          select: count("*"))
 
         alias Catalyst.RegistrationAdditionalInfo
 
@@ -134,6 +133,8 @@ defmodule Catalyst.LicenseInfoController do
               {:ok, register_info} ->
                 {:ok, register_info}
               {:error, changeset} ->
+                Logger.info "Changeset Error!"
+                Logger.info IO.inspect(changeset)
                 {:error, :changeset_error}
             end
         end
