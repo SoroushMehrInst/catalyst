@@ -28,7 +28,7 @@ environment :dev do
 end
 
 environment :prod do
-  set include_erts: true
+  set include_erts: false
   set include_src: false
   set cookie: :"H7A?[(K5UHEa3k6v~K`qTdecE};$Z^MiJI_dOM1W)l0K&w!v7|/ztJQX6Vy4DvOZ"
 end
@@ -44,4 +44,3 @@ release :catalyst do
     :runtime_tools
   ]
 end
-

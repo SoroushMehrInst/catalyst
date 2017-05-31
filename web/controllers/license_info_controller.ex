@@ -9,6 +9,8 @@ defmodule Catalyst.LicenseInfoController do
   alias Catalyst.Registration
   alias Catalyst.RegistrationAdditionalInfo
 
+  require Logger
+
   ###
   # API actions
   ###
@@ -16,7 +18,11 @@ defmodule Catalyst.LicenseInfoController do
   @doc """
   Registers a device with an activation code and returns registration status
   """
-  def register(conn, %{"device_id" => device_id, "active_code" => active_code, "additional_info" => additional_info, "app_id" => app_id}) do
+  def register(conn, %{"device_id" => device_id, "active_code" => active_code_raw, "additional_info" => additional_info, "app_id" => app_id}) do
+    active_code = normalize_active_code(active_code_raw)
+
+    Logger.info "Active Code: #{active_code}"
+
     case find_license(active_code, app_id) do
       {:error, _cause} ->
         conn
@@ -212,4 +218,54 @@ defmodule Catalyst.LicenseInfoController do
 
   defp get_default_app(), do:
     Repo.one(from d in Catalyst.Application, order_by: [d.id], select: d)
+
+  def normalize_active_code(active_code_raw) do
+    active_code_raw
+    |> String.trim
+    |> String.codepoints
+    |> do_normalize_active_code("")
+  end
+
+  defp do_normalize_active_code([], acc), do: acc
+
+
+  @doc """
+  ١
+٢
+٣
+٤
+٥
+٦
+٧
+٨
+٩
+٠
+  """
+  defp do_normalize_active_code([char | tail], acc) do
+    to_add_char = case char do
+      "۰" -> "0"
+      "۱" -> "1"
+      "۲" -> "2"
+      "۳" -> "3"
+      "۴" -> "4"
+      "۵" -> "5"
+      "۶" -> "6"
+      "۷" -> "7"
+      "۸" -> "8"
+      "۹" -> "9"
+      "٠" -> "0"
+      "١" -> "1"
+      "٢" -> "2"
+      "٣" -> "3"
+      "٤" -> "4"
+      "٥" -> "5"
+      "٦" -> "6"
+      "٧" -> "7"
+      "٨" -> "8"
+      "٩" -> "9"
+      _ -> char
+    end
+
+    do_normalize_active_code(tail, acc <> to_add_char)
+  end
 end
