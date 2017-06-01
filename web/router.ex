@@ -25,4 +25,12 @@ defmodule Catalyst.Router do
     post "/licensing/register", LicenseInfoController, :register
     post "/licensing/unregister", LicenseInfoController, :unregister
   end
+
+  use ExAdmin.Router
+  # your app's routes
+  scope "/admin", ExAdmin do
+    pipe_through :browser
+    admin_routes
+  end
+
 end
