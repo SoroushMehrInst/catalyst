@@ -51,7 +51,8 @@ defmodule Catalyst.Mixfile do
      {:ex_doc, "~> 0.15", only: :dev},
      {:earmark, "~> 1.2", only: :dev},
      {:edeliver, ">= 1.4.2"},
-     {:distillery, "~> 1.2", warn_missing: false}]
+     {:distillery, "~> 1.2", warn_missing: false},
+     {:numero, "~> 0.1.0"}]
   end
 
   defp description do
