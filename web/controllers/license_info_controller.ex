@@ -211,5 +211,5 @@ defmodule Catalyst.LicenseInfoController do
   end
 
   defp get_default_app(), do:
-    Repo.one(from d in Catalyst.Application, order_by: [d.id], select: d)
+    Repo.one(from d in Catalyst.Application, order_by: [d.id], select: d, limit: 1)
 end
