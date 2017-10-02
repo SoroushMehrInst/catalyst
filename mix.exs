@@ -1,7 +1,7 @@
 defmodule Catalyst.Mixfile do
   use Mix.Project
 
-  @version  "0.0.5"
+  @version  "0.0.6"
 
   def project do
     [app: :catalyst,
@@ -52,7 +52,7 @@ defmodule Catalyst.Mixfile do
      {:earmark, "~> 1.2", only: :dev},
      {:edeliver, ">= 1.4.2"},
      {:distillery, "~> 1.2", warn_missing: false},
-     {:numero, "~> 0.1.0"}]
+     {:numero, "~> 0.2.0"}]
   end
 
   defp description do

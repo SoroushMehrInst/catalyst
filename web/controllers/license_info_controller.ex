@@ -223,5 +223,6 @@ defmodule Catalyst.LicenseInfoController do
     active_code_raw
     |> String.trim
     |> Numero.normalize
+    |> Numero.remove_non_digits
   end
 end
